@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<meta name="theme-color" content="#0E0A05"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="AMIRLA"/>
+<meta name="application-name" content="AMIRLA"/>
+<meta name="description" content="AMIRLA - Agricultural Management & Intelligence for Rural Livestock Applications. Professional farm management for Nigerian livestock farmers."/>
+<meta name="msapplication-TileColor" content="#0E0A05"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<title>AMIRLA — Farm Management</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* ═══ RESET & ROOT ═══ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+:root{
+  --soil:#0E0A05;--earth:#1A1208;--bark:#261B0C;--clay:#3D2B14;
+  --humus:#4E3820;--card:#1E1509;--div:#3A2A10;
+  --glow:#4AFF91;--leaf:#2ECC71;--sage:#27AE60;--deep:#1A6B3C;
+  --ember:#E67E22;--sun:#F39C12;--dusk:#D35400;
+  --sky:#5DADE2;--water:#2E86AB;
+  --danger:#E74C3C;--rose:#FF6B6B;
+  --cream:#F5F0E8;--parch:#E8DCC8;--gold:#D4AF37;
+  --mist:#8A9BA8;--fog:#5A6A74;--smoke:#3A4A54;
+  --h1:'Playfair Display',serif;--body:'Outfit',sans-serif;
+}
+html,body{
+  height:100%;width:100%;
+  background:var(--soil);
+  font-family:var(--body);
+  color:var(--cream);
+  overflow:hidden;
+  position:fixed;
+  /* Safe area for notched phones */
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--clay);border-radius:1px;}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(50px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes ping{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.2);opacity:0}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 #4AFF9100}50%{box-shadow:0 0 18px 4px #4AFF9133}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes barFill{from{width:0}to{width:var(--w)}}
+
+.fu{animation:fadeUp .38s cubic-bezier(.16,1,.3,1) both}
+.fi{animation:fadeIn .25s ease both}
+.su{animation:slideUp .4s cubic-bezier(.16,1,.3,1) both}
+
+/* ═══ LAYOUT ═══ */
+#app{
+  display:flex;flex-direction:column;
+  height:100%;width:100%;
+  max-width:430px;margin:0 auto;
+  background:var(--soil);
+  position:relative;
+  box-shadow:0 0 60px #000a;
+}
+
+/* ═══ STATUS BAR ═══ */
+#statusbar{
+  background:var(--earth);
+  padding:8px 20px 6px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;font-size:12px;font-weight:700;color:var(--cream);
+}
+.sb-island{
+  width:80px;height:20px;background:var(--soil);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.sb-cam{width:7px;height:7px;border-radius:50%;background:var(--bark);}
+.sb-mic{width:30px;height:5px;border-radius:3px;background:var(--bark);}
+
+/* ═══ TOPBAR ═══ */
+#topbar{
+  background:var(--earth);
+  padding:8px 16px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--div);
+  flex-shrink:0;
+}
+.logo-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.logo-icon{
+  width:36px;height:36px;border-radius:12px;
+  background:linear-gradient(135deg,var(--deep),var(--sage));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 4px 14px #2ECC7155;
+}
+.logo-text-main{font-family:var(--h1);font-size:19px;font-weight:900;color:var(--cream);line-height:1;}
+.logo-text-sub{font-size:8px;color:var(--fog);letter-spacing:2px;text-transform:uppercase;}
+.topbar-icons{display:flex;gap:8px;}
+.icon-btn{
+  width:34px;height:34px;border-radius:10px;
+  background:var(--bark);border:1px solid var(--div);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all .2s;position:relative;
+}
+.icon-btn:active{transform:scale(.92);}
+.badge-dot{
+  position:absolute;top:-4px;right:-4px;
+  background:var(--danger);color:white;
+  width:16px;height:16px;border-radius:50%;
+  font-size:9px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ═══ SECONDARY NAV STRIP ═══ */
+#secnav{
+  background:var(--earth);
+  padding:8px 12px;
+  display:flex;gap:8px;overflow-x:auto;
+  border-bottom:1px solid var(--div);
+  flex-shrink:0;
+  scroll-behavior:smooth;
+}
+#secnav::-webkit-scrollbar{display:none;}
+.secnav-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:20px;
+  border:1.5px solid var(--clay);background:var(--card);
+  color:var(--fog);font-size:12px;font-weight:700;
+  cursor:pointer;white-space:nowrap;font-family:var(--body);
+  transition:all .2s;flex-shrink:0;
+}
+.secnav-btn.active{border-color:var(--leaf);background:#2ECC7122;color:var(--leaf);}
+
+/* ═══ CONTENT ═══ */
+#content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 14px 8px;}
+
+/* ═══ BOTTOM NAV ═══ */
+#bottomnav{
+  background:var(--earth);
+  border-top:1px solid var(--div);
+  padding:10px 4px calc(10px + env(safe-area-inset-bottom));
+  display:flex;justify-content:space-around;
+  flex-shrink:0;
+}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 10px;border-radius:16px;border:none;
+  background:transparent;cursor:pointer;transition:all .2s;
+  position:relative;min-width:54px;
+}
+.nav-btn.active{background:#2ECC7118;}
+.nav-btn span{font-size:10px;font-weight:700;color:var(--fog);letter-spacing:.2px;font-family:var(--body);}
+.nav-btn.active span{color:var(--leaf);}
+.nav-indicator{width:20px;height:3px;border-radius:2px;background:var(--leaf);box-shadow:0 0 8px var(--glow);margin-top:1px;}
+.nav-badge{
+  position:absolute;top:2px;right:4px;
+  background:var(--danger);color:#fff;
+  width:14px;height:14px;border-radius:50%;
+  font-size:9px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ═══ CARDS ═══ */
+.card{
+  background:var(--card);border:1px solid var(--div);
+  border-radius:18px;padding:15px;
+  transition:all .22s;margin-bottom:10px;
+}
+.card.tap{cursor:pointer;}
+.card.tap:active{transform:scale(.98);border-color:#2ECC7144;}
+
+/* ═══ HERO CARD ═══ */
+.hero{
+  background:linear-gradient(135deg,#1A6B3Ccc 0%,var(--bark) 100%);
+  border:1px solid #2ECC7133;border-radius:22px;
+  padding:20px;margin-bottom:18px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;right:-30px;top:-30px;
+  width:130px;height:130px;border-radius:50%;
+  background:#4AFF9108;
+}
+.hero::after{
+  content:'';position:absolute;right:20px;bottom:-40px;
+  width:100px;height:100px;border-radius:50%;
+  background:#2ECC7108;
+}
+
+/* ═══ STAT GRID ═══ */
+.stat-row{display:flex;gap:10px;margin-bottom:10px;}
+.stat-card{
+  flex:1;background:var(--card);border:1px solid var(--div);
+  border-radius:18px;padding:14px;cursor:pointer;transition:all .22s;
+}
+.stat-card:active{transform:scale(.97);}
+.stat-icon{
+  width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:10px;
+}
+.stat-label{font-size:10px;color:var(--fog);font-weight:600;text-transform:uppercase;letter-spacing:.8px;}
+.stat-value{font-family:var(--h1);font-size:24px;font-weight:700;color:var(--cream);margin-top:4px;}
+.stat-sub{font-size:11px;color:var(--fog);margin-top:3px;}
+
+/* ═══ PROGRESS BAR ═══ */
+.bar-track{background:var(--smoke);border-radius:10px;overflow:hidden;}
+.bar-fill{
+  height:100%;border-radius:10px;
+  transition:width .7s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 8px currentColor;
+}
+
+/* ═══ BADGE ═══ */
+.badge{
+  display:inline-flex;align-items:center;
+  border-radius:20px;padding:2px 9px;
+  font-size:11px;font-weight:600;letter-spacing:.2px;
+  flex-shrink:0;
+}
+
+/* ═══ STATUS DOT ═══ */
+.dot-wrap{position:relative;width:10px;height:10px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dot-ring{position:absolute;inset:0;border-radius:50%;animation:ping 1.5s ease-out infinite;}
+.dot-core{width:8px;height:8px;border-radius:50%;display:block;}
+
+/* ═══ SECTION HEADER ═══ */
+.sh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.sh h2{font-family:var(--h1);font-size:20px;font-weight:700;color:var(--cream);line-height:1.2;}
+.sh p{font-size:12px;color:var(--fog);margin-top:3px;}
+.sh-add{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 12px;border-radius:11px;
+  border:1.5px solid var(--leaf);background:#2ECC7122;
+  color:var(--leaf);font-size:12px;font-weight:700;cursor:pointer;
+  font-family:var(--body);transition:all .15s;white-space:nowrap;
+}
+.sh-add:active{transform:scale(.95);}
+
+/* ═══ BUTTON ═══ */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  border-radius:12px;font-weight:700;cursor:pointer;
+  font-family:var(--body);letter-spacing:.3px;transition:all .15s;
+  border:none;
+}
+.btn:active{transform:scale(.96);}
+.btn-primary{
+  background:linear-gradient(135deg,var(--leaf),var(--sage));
+  color:var(--soil);padding:13px 20px;font-size:14px;width:100%;
+  box-shadow:0 4px 16px #2ECC7144;
+}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-outline{background:transparent;border:1.5px solid var(--leaf);color:var(--leaf);}
+
+/* ═══ FORM FIELDS ═══ */
+.field{margin-bottom:14px;}
+.field label{font-size:11px;color:var(--mist);display:block;margin-bottom:6px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--bark);border:1px solid var(--clay);
+  border-radius:12px;padding:11px 14px;color:var(--cream);
+  font-size:14px;font-family:var(--body);outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.field input:focus,.field select:focus{border-color:var(--leaf);box-shadow:0 0 0 3px #2ECC7122;}
+.field input::placeholder{color:var(--fog);}
+.field select option{background:var(--bark);}
+
+/* ═══ BOTTOM SHEET ═══ */
+.sheet-overlay{
+  position:fixed;inset:0;background:#00000090;
+  z-index:900;display:flex;align-items:flex-end;justify-content:center;
+  animation:fadeIn .2s ease;
+}
+.sheet{
+  background:var(--bark);border-radius:24px 24px 0 0;
+  width:100%;max-width:430px;max-height:88vh;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:0 18px calc(20px + env(safe-area-inset-bottom));
+  animation:slideUp .35s cubic-bezier(.16,1,.3,1);
+}
+.sheet-handle{width:40px;height:4px;background:var(--clay);border-radius:2px;margin:12px auto 18px;}
+.sheet-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.sheet-title{font-family:var(--h1);font-size:19px;font-weight:700;color:var(--cream);}
+.sheet-close{
+  background:var(--clay);border:none;color:var(--mist);
+  border-radius:8px;width:30px;height:30px;cursor:pointer;
+  font-size:16px;display:flex;align-items:center;justify-content:center;
+}
+
+/* ═══ QUICK ACTIONS GRID ═══ */
+.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.qa-item{
+  background:var(--card);border:1px solid var(--div);
+  border-radius:15px;padding:14px 8px;text-align:center;cursor:pointer;
+  transition:all .2s;
+}
+.qa-item:active{transform:scale(.94);}
+.qa-icon-wrap{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+.qa-label{font-size:11px;color:var(--cream);font-weight:600;line-height:1.3;}
+
+/* ═══ TASK ITEM ═══ */
+.task-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 13px;border-radius:13px;
+  border:1px solid var(--div);background:var(--card);
+  transition:all .2s;margin-bottom:8px;cursor:pointer;
+}
+.task-item.done{background:#2ECC7112;border-color:#2ECC7144;opacity:.75;}
+.task-check{
+  width:22px;height:22px;border-radius:7px;flex-shrink:0;
+  border:2px solid var(--clay);background:var(--smoke);
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.task-check.done{background:var(--leaf);border-color:var(--leaf);}
+.task-text{font-size:13px;font-weight:500;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.task-item.done .task-text{text-decoration:line-through;color:var(--fog);}
+.task-meta{font-size:11px;color:var(--fog);margin-top:2px;}
+.pri-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* ═══ TRANSACTION ITEM ═══ */
+.tx-item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:15px;background:var(--card);border:1px solid var(--div);margin-bottom:8px;}
+.tx-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tx-cat{font-size:13px;font-weight:700;color:var(--cream);}
+.tx-meta{font-size:11px;color:var(--mist);}
+.tx-sub{font-size:10px;color:var(--fog);margin-top:1px;}
+.tx-amt{font-family:var(--h1);font-size:15px;font-weight:700;flex-shrink:0;margin-left:8px;}
+
+/* ═══ TOGGLE SWITCH ═══ */
+.toggle-wrap{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--div);}
+.toggle-track{width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle-thumb{width:20px;height:20px;border-radius:50%;background:var(--cream);position:absolute;top:2px;transition:left .2s;box-shadow:0 1px 4px #00000060;}
+
+/* ═══ FILTER CHIPS ═══ */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{
+  padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;
+  border:1.5px solid var(--clay);background:var(--card);color:var(--fog);
+  cursor:pointer;white-space:nowrap;font-family:var(--body);transition:all .2s;flex-shrink:0;
+}
+.chip.active{border-color:var(--leaf);background:#2ECC7122;color:var(--leaf);}
+
+/* ═══ ANIMAL CARD ═══ */
+.animal-card{
+  display:flex;align-items:center;gap:13px;
+  padding:13px;border-radius:16px;background:var(--card);
+  border:1px solid var(--div);margin-bottom:9px;cursor:pointer;transition:all .2s;
+}
+.animal-card:active{transform:scale(.98);}
+.animal-avatar{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px;}
+.animal-id{font-family:var(--h1);font-size:16px;font-weight:700;color:var(--cream);}
+.animal-breed{font-size:12px;color:var(--mist);margin-top:2px;}
+.animal-loc{font-size:11px;color:var(--fog);margin-top:2px;}
+
+/* ═══ VACCINE CARD ═══ */
+.vax-card{padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--div);margin-bottom:10px;}
+.vax-header{display:flex;gap:12px;align-items:flex-start;}
+.vax-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vax-name{font-family:var(--h1);font-size:15px;font-weight:700;color:var(--cream);margin-bottom:3px;}
+.vax-sp{font-size:12px;color:var(--mist);}
+.vax-dates{display:flex;gap:14px;font-size:12px;margin-top:6px;}
+
+/* ═══ PRICE ROW ═══ */
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--div);}
+.price-item{font-size:12px;color:var(--cream);}
+.price-val{font-size:12px;font-weight:700;}
+
+/* ═══ INSTALL BANNER ═══ */
+#install-banner{
+  position:fixed;bottom:0;left:0;right:0;
+  background:linear-gradient(135deg,var(--deep),var(--bark));
+  border-top:1px solid var(--leaf);
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  z-index:9999;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 -8px 40px #000a;
+}
+#install-banner.hidden{display:none;}
+.install-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--deep),var(--sage));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.install-text{flex:1;}
+.install-title{font-weight:700;color:var(--cream);font-size:14px;}
+.install-sub{font-size:11px;color:var(--mist);margin-top:2px;}
+#install-btn{
+  background:linear-gradient(135deg,var(--leaf),var(--sage));
+  color:var(--soil);border:none;border-radius:10px;
+  padding:10px 16px;font-size:13px;font-weight:800;
+  cursor:pointer;font-family:var(--body);white-space:nowrap;
+  box-shadow:0 4px 14px #2ECC7144;flex-shrink:0;
+}
+#install-close{background:none;border:none;color:var(--fog);font-size:18px;cursor:pointer;flex-shrink:0;padding:4px;}
+
+/* ═══ LOADING SPLASH ═══ */
+#splash{
+  position:fixed;inset:0;background:var(--soil);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:99999;transition:opacity .5s ease;
+}
+#splash.gone{opacity:0;pointer-events:none;}
+.splash-logo{font-size:64px;margin-bottom:16px;animation:glowPulse 2s ease-in-out infinite;}
+.splash-name{font-family:var(--h1);font-size:38px;font-weight:900;color:var(--glow);letter-spacing:-2px;}
+.splash-tagline{font-size:12px;color:var(--fog);letter-spacing:2px;text-transform:uppercase;margin-top:8px;}
+.splash-bar{width:120px;height:3px;background:var(--smoke);border-radius:2px;margin-top:40px;overflow:hidden;}
+.splash-progress{height:100%;background:var(--leaf);border-radius:2px;animation:barFill 2s ease forwards;--w:100%;}
+
+/* ═══ EMPTY STATE ═══ */
+.empty{text-align:center;padding:40px 20px;color:var(--fog);}
+.empty-icon{font-size:40px;margin-bottom:12px;}
+.empty-text{font-size:14px;}
+
+/* ═══ OFFLINE TOAST ═══ */
+#offline-toast{
+  position:fixed;top:80px;left:50%;transform:translateX(-50%);
+  background:var(--ember);color:var(--soil);
+  padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;
+  z-index:8888;opacity:0;transition:opacity .3s;pointer-events:none;
+  font-family:var(--body);
+}
+#offline-toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-logo">🌿</div>
+  <div class="splash-name">AMIRLA</div>
+  <div class="splash-tagline">Farm Management System</div>
+  <div class="splash-bar"><div class="splash-progress"></div></div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div id="install-banner" class="hidden">
+  <div class="install-icon">🌿</div>
+  <div class="install-text">
+    <div class="install-title">Install AMIRLA</div>
+    <div class="install-sub">Add to home screen — works offline</div>
+  </div>
+  <button id="install-btn">📲 Install</button>
+  <button id="install-close">✕</button>
+</div>
+
+<!-- OFFLINE TOAST -->
+<div id="offline-toast">📡 Offline — Data saved locally</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- STATUS BAR -->
+  <div id="statusbar">
+    <span id="sb-time">9:41</span>
+    <div class="sb-island">
+      <div class="sb-cam"></div>
+      <div class="sb-mic"></div>
+    </div>
+    <span>●●● WiFi 🔋</span>
+  </div>
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="logo-wrap" onclick="goHome()">
+      <div class="logo-icon">🌿</div>
+      <div>
+        <div class="logo-text-main">AMIRLA</div>
+        <div class="logo-text-sub">Farm Management</div>
+      </div>
+    </div>
+    <div class="topbar-icons">
+      <div class="icon-btn" id="alert-btn" onclick="navTo('health')" style="display:none;background:#E74C3C22;border-color:#E74C3C44;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <div class="badge-dot" id="alert-badge">0</div>
+      </div>
+      <div class="icon-btn" onclick="navTo('settings')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5A6A74" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECONDARY NAV -->
+  <div id="secnav" style="display:none">
+    <button class="secnav-btn" data-screen="market"   onclick="navTo('market')">🏪 Market</button>
+    <button class="secnav-btn" data-screen="vaccines" onclick="navTo('vaccines')">💉 Vaccines</button>
+    <button class="secnav-btn" data-screen="tasks"    onclick="navTo('tasks')">✅ Tasks</button>
+    <button class="secnav-btn" data-screen="staff"    onclick="navTo('staff')">👥 Staff</button>
+    <button class="secnav-btn" data-screen="reports"  onclick="navTo('reports')">📊 Reports</button>
+    <button class="secnav-btn" data-screen="settings" onclick="navTo('settings')">⚙️ Settings</button>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div id="content"></div>
+
+  <!-- BOTTOM NAV -->
+  <div id="bottomnav">
+    <button class="nav-btn active" id="nav-home"    onclick="navTo('home')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" id="nav-animals" onclick="navTo('animals')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span>Animals</span>
+    </button>
+    <button class="nav-btn" id="nav-health" onclick="navTo('health')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Health</span>
+    </button>
+    <button class="nav-btn" id="nav-feeding" onclick="navTo('feeding')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <span>Feeding</span>
+    </button>
+    <button class="nav-btn" id="nav-finance" onclick="navTo('finance')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span>Finance</span>
+    </button>
+    <button class="nav-btn" id="nav-more" onclick="toggleMore()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+      <span>More</span>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   AMIRLA — Complete Farm Management Application
+   Offline-capable PWA with local data persistence
+══════════════════════════════════════════════════════ */
+
+/* ── DATA STORE ── */
+const DEFAULT_DATA = {
+  animals:[
+    {id:"G001",sp:"Goat",breed:"Red Sokoto",sex:"F",dob:"2022-03-15",wt:24,status:"Healthy",pen:"Pen A",notes:"Foundation breeding doe"},
+    {id:"G002",sp:"Goat",breed:"WAD Cross",sex:"F",dob:"2022-07-20",wt:22,status:"Healthy",pen:"Pen A",notes:""},
+    {id:"G003",sp:"Goat",breed:"Sahel",sex:"M",dob:"2021-11-10",wt:38,status:"Healthy",pen:"Buck Pen",notes:"Breeding buck — 12 does served"},
+    {id:"G004",sp:"Goat",breed:"WAD",sex:"F",dob:"2023-01-05",wt:19,status:"Pregnant",pen:"Pen B",notes:"Due April — twins expected"},
+    {id:"G005",sp:"Goat",breed:"Red Sokoto",sex:"F",dob:"2023-06-12",wt:17,status:"Sick",pen:"Sick Bay",notes:"Respiratory infection — on OTC LA"},
+    {id:"G006",sp:"Goat",breed:"WAD",sex:"F",dob:"2022-09-01",wt:21,status:"Healthy",pen:"Pen A",notes:""},
+    {id:"G007",sp:"Goat",breed:"Sahel Cross",sex:"F",dob:"2022-05-20",wt:25,status:"Lactating",pen:"Pen B",notes:"2.1L milk/day"},
+    {id:"C001",sp:"Cattle",breed:"Bunaji (White Fulani)",sex:"F",dob:"2020-04-10",wt:320,status:"Healthy",pen:"Cattle Barn",notes:"Best producer — 4.2L/day"},
+    {id:"C002",sp:"Cattle",breed:"Zebu Cross",sex:"F",dob:"2021-08-22",wt:285,status:"Pregnant",pen:"Cattle Barn",notes:"Due June — 1st calf"},
+    {id:"C003",sp:"Cattle",breed:"Bunaji",sex:"M",dob:"2019-12-05",wt:480,status:"Healthy",pen:"Bull Pen",notes:"Breeding bull"},
+    {id:"C004",sp:"Cattle",breed:"Bunaji",sex:"F",dob:"2022-02-14",wt:262,status:"Healthy",pen:"Cattle Barn",notes:"Growing well"},
+    {id:"C005",sp:"Cattle",breed:"Zebu",sex:"F",dob:"2021-06-10",wt:270,status:"Healthy",pen:"Cattle Barn",notes:""},
+  ],
+  treatments:[
+    {id:1,date:"2024-01-20",aid:"G005",drug:"Oxytetracycline 20% LA",dose:"5ml IM",dx:"Respiratory infection — fever 40.5°C",by:"Farm Manager",status:"Ongoing",next:"2024-01-23"},
+    {id:2,date:"2024-01-15",aid:"C001",drug:"Ivermectin 1%",dose:"6ml SC",dx:"Quarterly deworming",by:"Dr. Oluwaseun",status:"Completed",next:"2024-04-15"},
+    {id:3,date:"2024-01-10",aid:"G001",drug:"PPR Vaccine",dose:"1ml SC",dx:"Annual PPR vaccination",by:"State Vet Service",status:"Completed",next:"2025-01-10"},
+    {id:4,date:"2024-01-18",aid:"C002",drug:"Calcium Borogluconate 40%",dose:"400ml IV",dx:"Pre-calving hypocalcaemia prevention",by:"Dr. Oluwaseun",status:"Completed",next:"—"},
+  ],
+  vaccines:[
+    {id:1,name:"PPR Vaccine",sp:"Goats",due:"2024-02-15",last:"2024-01-08",status:"Upcoming",notes:"50 doses — critical in Kwara State"},
+    {id:2,name:"FMD Trivalent",sp:"Both",due:"2024-03-01",last:"2023-09-01",status:"Upcoming",notes:"65 animals every 6 months"},
+    {id:3,name:"Vitamin AD3E Injection",sp:"Both",due:"2024-02-01",last:"2023-11-01",status:"Overdue",notes:"URGENT — quarterly injection overdue!"},
+    {id:4,name:"Ivermectin Deworming",sp:"Both",due:"2024-04-01",last:"2024-01-15",status:"Scheduled",notes:"Q2 quarterly deworming"},
+    {id:5,name:"Tick Spray (Cypermethrin)",sp:"Both",due:"2024-02-01",last:"2024-01-01",status:"Upcoming",notes:"Monthly acaricide treatment"},
+    {id:6,name:"Anthrax (Sterne Vaccine)",sp:"Both",due:"2024-09-01",last:"2023-09-01",status:"Scheduled",notes:"Annual — seasonal risk Kwara"},
+    {id:7,name:"CBPP Vaccine",sp:"Cattle",due:"2024-03-15",last:"2023-03-15",status:"Upcoming",notes:"Annual cattle lung disease"},
+  ],
+  feeding:[
+    {id:1,time:"06:30",label:"Morning Roughage",goat:"75kg fresh guinea grass",cattle:"230kg napier grass",done:true},
+    {id:2,time:"08:00",label:"Morning Concentrate",goat:"10kg maize-GNC-bran mix",cattle:"52kg dairy concentrate",done:true},
+    {id:3,time:"10:00",label:"Water & Mineral",goat:"200L fresh water + lick",cattle:"750L + mineral block",done:false},
+    {id:4,time:"15:00",label:"Afternoon Roughage",goat:"25kg hay/groundnut haulm",cattle:"100kg maize stover",done:false},
+    {id:5,time:"17:00",label:"Evening Concentrate",goat:"8kg concentrate mix",cattle:"40kg concentrate",done:false},
+    {id:6,time:"19:00",label:"Night Roughage Rack",goat:"12kg dry hay in rack",cattle:"60kg stover in rack",done:false},
+  ],
+  tasks:[
+    {id:1,time:"05:30",task:"Morning headcount — all animals present?",who:"Herder 1",done:true,pri:"high"},
+    {id:2,time:"06:00",task:"Visual health check — identify sick/injured",who:"Herder 1",done:true,pri:"high"},
+    {id:3,time:"06:30",task:"First feeding — fresh roughage distribution",who:"Herder 1 & 2",done:true,pri:"high"},
+    {id:4,time:"08:00",task:"Weigh & serve concentrate portions",who:"Farm Manager",done:true,pri:"high"},
+    {id:5,time:"09:00",task:"Pen cleaning — remove manure, fresh bedding",who:"Labourer",done:false,pri:"medium"},
+    {id:6,time:"10:00",task:"Treat G005 — OTC injection 5ml IM",who:"Farm Manager",done:false,pri:"high"},
+    {id:7,time:"11:00",task:"Check water troughs — refill if needed",who:"Labourer",done:false,pri:"medium"},
+    {id:8,time:"13:00",task:"Breeding check — does in oestrus",who:"Farm Manager",done:false,pri:"medium"},
+    {id:9,time:"15:00",task:"Afternoon roughage feeding",who:"Herder 2",done:false,pri:"high"},
+    {id:10,time:"17:00",task:"Evening concentrate feeding",who:"Herder 1",done:false,pri:"high"},
+    {id:11,time:"17:30",task:"Evening headcount + pen all animals",who:"All Herders",done:false,pri:"high"},
+    {id:12,time:"18:30",task:"Fence perimeter security check",who:"Security",done:false,pri:"medium"},
+  ],
+  txns:[
+    {id:1,date:"2024-01-25",type:"Sale",cat:"Live Cattle",amt:450000,qty:"1 Bunaji cow",party:"Alhaji Musa — Ipata Mkt",notes:""},
+    {id:2,date:"2024-01-22",type:"Sale",cat:"Live Goats",amt:90000,qty:"3 adult does",party:"Ibrahim — Mandate Area",notes:""},
+    {id:3,date:"2024-01-20",type:"Expense",cat:"Feed — Groundnut Cake",amt:17000,qty:"1 bag × 50kg",party:"Ipata Market",notes:""},
+    {id:4,date:"2024-01-18",type:"Sale",cat:"Milk Sales",amt:21000,qty:"70 litres",party:"Iya Amaka — Daily buyer",notes:""},
+    {id:5,date:"2024-01-16",type:"Expense",cat:"Veterinary Drugs",amt:14500,qty:"OTC 2 vials + syringes",party:"Vet Shop, Eiyenkorin Rd",notes:""},
+    {id:6,date:"2024-01-14",type:"Expense",cat:"Labour — Monthly Pay",amt:55000,qty:"Musa Abdullahi",party:"Senior Herder",notes:""},
+    {id:7,date:"2024-01-12",type:"Sale",cat:"Manure / Compost",amt:9000,qty:"1.8 tons bagged",party:"Farmers Co-op Ilorin",notes:""},
+    {id:8,date:"2024-01-10",type:"Expense",cat:"Feed — Maize Grain",amt:24000,qty:"2 bags × 50kg",party:"Oja-Oba Market",notes:""},
+    {id:9,date:"2024-01-08",type:"Sale",cat:"Live Goats",amt:60000,qty:"2 weaned kids",party:"Alhaji Sule",notes:"Breeding stock"},
+  ],
+  staff:[
+    {id:1,name:"Alhaji Ibrahim Suleiman",role:"Farm Manager",phone:"0803-XXX-XXXX",sal:100000,status:"Active",since:"2024-01-01"},
+    {id:2,name:"Musa Abdullahi",role:"Senior Herdsman",phone:"0806-XXX-XXXX",sal:55000,status:"Active",since:"2024-01-01"},
+    {id:3,name:"Usman Garba",role:"Junior Herder 1",phone:"0810-XXX-XXXX",sal:30000,status:"Active",since:"2024-01-01"},
+    {id:4,name:"Aminu Yahaya",role:"Junior Herder 2",phone:"0809-XXX-XXXX",sal:30000,status:"Active",since:"2024-01-01"},
+    {id:5,name:"Dr. Oluwaseun Adeyemi",role:"Vet Officer (Part-time)",phone:"0708-XXX-XXXX",sal:40000,status:"Part-time",since:"2024-01-01"},
+    {id:6,name:"Sule Mohammed",role:"Security Guard",phone:"0812-XXX-XXXX",sal:24000,status:"Active",since:"2024-01-01"},
+    {id:7,name:"Abdulrahman Kareem",role:"Driver / Logistics",phone:"0815-XXX-XXXX",sal:22000,status:"Active",since:"2024-01-01"},
+  ],
+  notify:true,offline:true
+};
+
+/* ── PERSISTENCE ── */
+function saveData(d){try{localStorage.setItem('amirla_data',JSON.stringify(d));}catch(e){}}
+function loadData(){try{const s=localStorage.getItem('amirla_data');return s?JSON.parse(s):DEFAULT_DATA;}catch(e){return DEFAULT_DATA;}}
+
+let DB = loadData();
+function save(){saveData(DB);}
+
+/* ── HELPERS ── */
+const fmt   = n=>`₦${Number(n).toLocaleString()}`;
+const pct   = (a,b)=>b>0?Math.round(a/b*100):0;
+const esc   = s=>(s||"").replace(/</g,"&lt;");
+const sCol  = s=>s==="Healthy"?"#2ECC71":s==="Sick"?"#E74C3C":s==="Pregnant"?"#5DADE2":s==="Lactating"?"#D4AF37":"#8A9BA8";
+const vCol  = s=>s==="Overdue"?"#E74C3C":s==="Upcoming"?"#F39C12":s==="Completed"?"#2ECC71":"#5DADE2";
+const txCol = t=>t==="Sale"?"#2ECC71":"#E74C3C";
+
+let currentScreen="home";
+let moreOpen=false;
+
+/* ── NAVIGATION ── */
+function navTo(screen){
+  currentScreen=screen;
+  moreOpen=false;
+  renderScreen();
+  updateNav();
+  document.getElementById('content').scrollTop=0;
+}
+function goHome(){navTo('home');}
+
+const PRIMARY=['home','animals','health','feeding','finance'];
+const SECONDARY=['market','vaccines','tasks','staff','reports','settings'];
+
+function updateNav(){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const navEl=document.getElementById('nav-'+currentScreen);
+  if(navEl) navEl.classList.add('active');
+  if(SECONDARY.includes(currentScreen)){
+    document.getElementById('nav-more').classList.add('active');
+  }
+
+  // secondary nav
+  const sn=document.getElementById('secnav');
+  if(SECONDARY.includes(currentScreen)){
+    sn.style.display='flex';
+    document.querySelectorAll('.secnav-btn').forEach(b=>{
+      b.classList.toggle('active',b.dataset.screen===currentScreen);
+    });
+  } else {
+    sn.style.display='none';
+  }
+
+  // alert badge
+  const sick=DB.animals.filter(a=>a.status==="Sick").length;
+  const overdue=DB.vaccines.filter(v=>v.status==="Overdue").length;
+  const alertBtn=document.getElementById('alert-btn');
+  if(sick+overdue>0){
+    alertBtn.style.display='flex';
+    document.getElementById('alert-badge').textContent=sick+overdue;
+  } else {
+    alertBtn.style.display='none';
+  }
+}
+
+function toggleMore(){
+  moreOpen=!moreOpen;
+  if(moreOpen && !SECONDARY.includes(currentScreen)) navTo('market');
+}
+
+/* ── CURRENT TIME ── */
+function updateTime(){
+  const now=new Date();
+  let h=now.getHours(),m=now.getMinutes();
+  const ampm=h>=12?'PM':'AM';
+  h=h%12||12;
+  document.getElementById('sb-time').textContent=`${h}:${m.toString().padStart(2,'0')} ${ampm}`;
+}
+updateTime();setInterval(updateTime,30000);
+
+/* ── DATE ── */
+function todayStr(){
+  return new Date().toLocaleDateString('en-NG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+
+/* ── BAR HTML ── */
+function barHtml(p,color,h=8){
+  return `<div class="bar-track" style="height:${h}px"><div class="bar-fill" style="width:${Math.min(p,100)}%;height:${h}px;background:linear-gradient(90deg,${color},${color}cc);box-shadow:0 0 8px ${color}66;"></div></div>`;
+}
+
+/* ── BADGE HTML ── */
+function badgeHtml(text,color){
+  return `<span class="badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${esc(text)}</span>`;
+}
+
+/* ── DOT HTML ── */
+function dotHtml(color){
+  return `<span class="dot-wrap"><span class="dot-ring" style="background:${color};opacity:.4"></span><span class="dot-core" style="background:${color}"></span></span>`;
+}
+
+/* ══════════ SCREEN RENDERERS ══════════ */
+
+/* ── HOME ── */
+function renderHome(){
+  const income=DB.txns.filter(t=>t.type==="Sale").reduce((s,t)=>s+t.amt,0);
+  const expense=DB.txns.filter(t=>t.type==="Expense").reduce((s,t)=>s+t.amt,0);
+  const profit=income-expense;
+  const sick=DB.animals.filter(a=>a.status==="Sick").length;
+  const preg=DB.animals.filter(a=>a.status==="Pregnant").length;
+  const lact=DB.animals.filter(a=>a.status==="Lactating").length;
+  const done=DB.tasks.filter(t=>t.done).length;
+  const goats=DB.animals.filter(a=>a.sp==="Goat").length;
+  const cattle=DB.animals.filter(a=>a.sp==="Cattle").length;
+  const overdue=DB.vaccines.filter(v=>v.status==="Overdue").length;
+  const hr=new Date().getHours();
+  const greet=hr<12?"Good Morning ☀️":hr<17?"Good Afternoon 🌤️":"Good Evening 🌙";
+
+  const tasksDoneHTML=DB.tasks.filter(t=>t.pri==="high").slice(0,5).map(t=>`
+    <div class="task-item ${t.done?'done':''}" onclick="toggleTask(${t.id})">
+      <div class="task-check ${t.done?'done':''}">
+        ${t.done?`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0E0A05" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="task-text">${esc(t.task)}</div>
+        <div class="task-meta">${t.time} · ${esc(t.who)}</div>
+      </div>
+      ${!t.done?`<div class="pri-dot" style="background:${t.pri==='high'?'#E74C3C':'#F39C12'}"></div>`:''}
+    </div>`).join('');
+
+  const recentTxHTML=DB.txns.slice(0,4).map(t=>`
+    <div class="tx-item">
+      <div class="tx-icon" style="background:${txCol(t.type)}22">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${txCol(t.type)}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          ${t.type==="Sale"?'<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>'
+                           :'<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>'}
+        </svg>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="tx-cat">${esc(t.cat)}</div>
+        <div class="tx-meta">${esc(t.party)}</div>
+        <div class="tx-sub">${t.qty} · ${t.date}</div>
+      </div>
+      <div class="tx-amt" style="color:${txCol(t.type)}">${t.type==="Sale"?"+":"−"}${fmt(t.amt)}</div>
+    </div>`).join('');
+
+  return `
+  <div class="fu">
+    <!-- Hero -->
+    <div class="hero">
+      <div style="font-size:11px;color:#2ECC71;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">🌿 ${todayStr()}</div>
+      <div style="font-family:var(--h1);font-size:22px;font-weight:700;color:var(--cream);line-height:1.3;margin-bottom:4px">${greet},<br>Farm Manager!</div>
+      <div style="font-size:13px;color:var(--mist);margin-bottom:14px">${DB.animals.length} animals · ${done}/${DB.tasks.length} tasks done today</div>
+      <div style="margin-bottom:6px">${barHtml(pct(done,DB.tasks.length),'#4AFF91',6)}</div>
+      <div style="font-size:11px;color:var(--fog)">Daily tasks ${pct(done,DB.tasks.length)}% complete</div>
+      ${sick>0?`<div onclick="navTo('health')" style="margin-top:12px;background:#E74C3C22;border:1px solid #E74C3C44;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;cursor:pointer">${dotHtml('#E74C3C')}<span style="font-size:12px;color:#E74C3C;font-weight:600">${sick} animal${sick>1?"s":""} need veterinary treatment</span></div>`:''}
+      ${overdue>0?`<div onclick="navTo('vaccines')" style="margin-top:8px;background:#F39C1222;border:1px solid #F39C1244;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;cursor:pointer">${dotHtml('#F39C12')}<span style="font-size:12px;color:#F39C12;font-weight:600">${overdue} vaccination${overdue>1?"s":""} overdue!</span></div>`:''}
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat-card" onclick="navTo('animals')">
+        <div class="stat-icon" style="background:#2ECC7122"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ECC71" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div class="stat-label">Total Herd</div>
+        <div class="stat-value" style="color:#2ECC71">${DB.animals.length}</div>
+        <div class="stat-sub">${goats} goats · ${cattle} cattle</div>
+      </div>
+      <div class="stat-card" onclick="navTo('finance')">
+        <div class="stat-icon" style="background:${profit>=0?'#2ECC7122':'#E74C3C22'}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${profit>=0?'#2ECC71':'#E74C3C'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="stat-label">Net Profit</div>
+        <div class="stat-value" style="color:${profit>=0?'#2ECC71':'#E74C3C'};font-size:18px">${fmt(profit)}</div>
+        <div class="stat-sub">${profit>=0?"Profitable this period":"Loss this period"}</div>
+      </div>
+    </div>
+    <div class="stat-row" style="margin-bottom:18px">
+      <div class="stat-card" onclick="navTo('finance')">
+        <div class="stat-icon" style="background:#5DADE222"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5DADE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div>
+        <div class="stat-label">Revenue</div>
+        <div class="stat-value" style="color:#5DADE2;font-size:18px">${fmt(income)}</div>
+        <div class="stat-sub">Total sales</div>
+      </div>
+      <div class="stat-card" onclick="navTo('finance')">
+        <div class="stat-icon" style="background:#E67E2222"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
+        <div class="stat-label">Expenses</div>
+        <div class="stat-value" style="color:#E67E22;font-size:18px">${fmt(expense)}</div>
+        <div class="stat-sub">Total costs</div>
+      </div>
+    </div>
+
+    <!-- Herd Snapshot -->
+    <div class="card" style="margin-bottom:18px">
+      <div style="font-size:11px;color:var(--fog);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">Herd Status Snapshot</div>
+      <div style="display:flex;gap:8px">
+        ${[["Healthy",DB.animals.filter(a=>a.status==="Healthy").length,"#2ECC71"],
+           ["Pregnant",preg,"#5DADE2"],
+           ["Sick",sick,"#E74C3C"],
+           ["Lactating",lact,"#D4AF37"]].map(([l,v,c])=>`
+          <div style="flex:1;background:${c}18;border:1px solid ${c}33;border-radius:12px;padding:8px 4px;text-align:center">
+            <div style="font-family:var(--h1);font-size:20px;font-weight:700;color:${c}">${v}</div>
+            <div style="font-size:10px;color:${c};font-weight:600;margin-top:2px">${l}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div style="font-size:11px;color:var(--fog);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">Quick Actions</div>
+    <div class="qa-grid">
+      ${[["💊","Treat Animal","health","#E74C3C"],["🌿","Log Feeding","feeding","#2ECC71"],["💰","Record Sale","finance","#E67E22"],
+         ["🐄","Add Animal","animals","#5DADE2"],["💉","Vaccinate","vaccines","#D4AF37"],["📊","Reports","reports","#8A9BA8"]].map(([ic,lb,sc,cl])=>`
+        <div class="qa-item" onclick="navTo('${sc}')" onmouseenter="this.style.borderColor='${cl}88';this.style.background='${cl}12'" onmouseleave="this.style.borderColor='';this.style.background=''">
+          <div class="qa-icon-wrap" style="background:${cl}22"><span style="font-size:20px">${ic}</span></div>
+          <div class="qa-label">${lb}</div>
+        </div>`).join('')}
+    </div>
+
+    <!-- Priority Tasks -->
+    <div class="sh"><div><h2>Priority Tasks</h2><p>Tap to mark complete</p></div></div>
+    ${tasksDoneHTML}
+
+    <!-- Recent Transactions -->
+    <div class="sh" style="margin-top:16px"><div><h2>Recent Transactions</h2></div><button class="sh-add" onclick="navTo('finance')">View All</button></div>
+    ${recentTxHTML}
+  </div>`;
+}
+
+/* ── ANIMALS ── */
+let animalFilter="All", animalSearch="";
+function renderAnimals(){
+  const filtered=DB.animals.filter(a=>(animalFilter==="All"||a.sp===animalFilter||a.status===animalFilter)&&
+    (a.id.toLowerCase().includes(animalSearch.toLowerCase())||a.breed.toLowerCase().includes(animalSearch.toLowerCase())||a.status.toLowerCase().includes(animalSearch.toLowerCase())));
+
+  const chips=["All","Goat","Cattle","Healthy","Sick","Pregnant","Lactating"].map(f=>
+    `<div class="chip ${animalFilter===f?'active':''}" onclick="setAnimalFilter('${f}')">${f}</div>`).join('');
+
+  const cards=filtered.map(a=>`
+    <div class="animal-card" onclick="showAnimalDetail('${a.id}')">
+      <div class="animal-avatar" style="background:${sCol(a.status)}22">${a.sp==="Goat"?"🐐":"🐄"}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+          <span class="animal-id">${esc(a.id)}</span>
+          ${badgeHtml(a.status,sCol(a.status))}
+        </div>
+        <div class="animal-breed">${esc(a.breed)} · ${a.sex==="F"?"♀ Female":"♂ Male"} · ${a.wt}kg</div>
+        <div class="animal-loc">📍 ${esc(a.pen)}</div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3A4A54" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`).join('') || '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">No animals match your filter</div></div>';
+
+  return `
+  <div class="fu">
+    <div class="sh">
+      <div><h2>Animal Register</h2><p>${DB.animals.length} animals on record</p></div>
+      <button class="sh-add" onclick="showAddAnimal()">➕ Add Animal</button>
+    </div>
+    <div class="field"><input type="text" placeholder="🔍 Search by tag, breed, status…" value="${esc(animalSearch)}" oninput="animalSearch=this.value;rerenderAnimals()"/></div>
+    <div class="chips">${chips}</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      ${[["🐐 Goats",DB.animals.filter(a=>a.sp==="Goat").length,"#2ECC71"],
+         ["🐄 Cattle",DB.animals.filter(a=>a.sp==="Cattle").length,"#5DADE2"],
+         ["🏥 Sick",DB.animals.filter(a=>a.status==="Sick").length,"#E74C3C"],
+         ["🤰 Pregnant",DB.animals.filter(a=>a.status==="Pregnant").length,"#D4AF37"]].map(([l,v,c])=>`
+        <div style="flex:1;background:${c}18;border:1px solid ${c}33;border-radius:12px;padding:8px 4px;text-align:center">
+          <div style="font-family:var(--h1);font-size:20px;font-weight:700;color:${c}">${v}</div>
+          <div style="font-size:9px;color:${c};font-weight:600">${l}</div>
+        </div>`).join('')}
+    </div>
+    ${cards}
+  </div>`;
+}
+function setAnimalFilter(f){animalFilter=f;rerenderAnimals();}
+function rerenderAnimals(){document.getElementById('content').innerHTML=renderAnimals();}
+
+function showAnimalDetail(id){
+  const a=DB.animals.find(x=>x.id===id);
+  if(!a)return;
+  const rows=[["Species",a.sp],["Breed",a.breed],["Sex",a.sex==="F"?"Female":"Male"],["Date of Birth",a.dob||"—"],
+              ["Live Weight",`${a.wt} kg`],["Pen / Location",a.pen],["Notes",a.notes||"—"]];
+  openSheet("Animal — "+a.id,`
+    <div style="display:flex;align-items:center;gap:14px;background:var(--card);border-radius:16px;padding:14px;margin-bottom:18px">
+      <div style="width:56px;height:56px;border-radius:16px;background:${sCol(a.status)}22;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">${a.sp==="Goat"?"🐐":"🐄"}</div>
+      <div><div style="font-family:var(--h1);font-size:20px;font-weight:700;color:var(--cream)">${esc(a.id)}</div>
+        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">${badgeHtml(a.status,sCol(a.status))}${badgeHtml(a.sp,"#5DADE2")}</div>
+      </div>
+    </div>
+    ${rows.map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--div)"><span style="font-size:13px;color:var(--fog)">${k}</span><span style="font-size:13px;font-weight:600;color:var(--cream);text-align:right;max-width:55%">${esc(v)}</span></div>`).join('')}
+  `);
+}
+
+function showAddAnimal(){
+  openSheet("Register New Animal",`
+    <div class="field"><label>Tag / ID Number</label><input id="f-id" type="text" placeholder="e.g. G051"/></div>
+    <div class="field"><label>Species</label><select id="f-sp"><option>Goat</option><option>Cattle</option></select></div>
+    <div class="field"><label>Breed</label><input id="f-breed" type="text" placeholder="e.g. Red Sokoto, Bunaji"/></div>
+    <div class="field"><label>Sex</label><select id="f-sex"><option>Female</option><option>Male</option></select></div>
+    <div class="field"><label>Date of Birth</label><input id="f-dob" type="date"/></div>
+    <div class="field"><label>Weight (kg)</label><input id="f-wt" type="number" placeholder="kg"/></div>
+    <div class="field"><label>Health Status</label><select id="f-status"><option>Healthy</option><option>Sick</option><option>Pregnant</option><option>Lactating</option></select></div>
+    <div class="field"><label>Pen / Location</label><input id="f-pen" type="text" placeholder="e.g. Pen A, Cattle Barn"/></div>
+    <div class="field"><label>Notes</label><input id="f-notes" type="text" placeholder="Optional notes"/></div>
+    <button class="btn btn-primary" onclick="saveAnimal()">💾 Save Animal Record</button>
+  `);
+}
+function saveAnimal(){
+  const id=document.getElementById('f-id').value.trim();
+  const breed=document.getElementById('f-breed').value.trim();
+  if(!id||!breed)return;
+  DB.animals.push({id,sp:document.getElementById('f-sp').value,breed,sex:document.getElementById('f-sex').value==="Female"?"F":"M",dob:document.getElementById('f-dob').value,wt:+document.getElementById('f-wt').value||0,status:document.getElementById('f-status').value,pen:document.getElementById('f-pen').value,notes:document.getElementById('f-notes').value});
+  save(); closeSheet(); renderScreen();
+}
+
+/* ── HEALTH ── */
+let healthTab="treatments";
+function renderHealth(){
+  const sick=DB.animals.filter(a=>a.status==="Sick");
+  const txHTML=DB.treatments.map(t=>{
+    const ani=DB.animals.find(a=>a.id===t.aid);
+    const sc=t.status==="Completed"?"#2ECC71":t.status==="Ongoing"?"#F39C12":"#E74C3C";
+    return `<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <span style="font-family:var(--h1);font-size:15px;font-weight:700;color:var(--cream)">${esc(t.aid)}</span>
+            ${ani?badgeHtml(ani.sp,"#5DADE2"):''}${badgeHtml(t.status,sc)}
+          </div>
+          <div style="font-size:13px;color:var(--parch);font-weight:500">${esc(t.dx)}</div>
+        </div>
+        <span style="font-size:11px;color:var(--fog);flex-shrink:0;margin-left:8px">${t.date}</span>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <span style="font-size:12px;color:var(--mist)">💊 ${esc(t.drug)}</span>
+        <span style="font-size:12px;color:var(--mist)">💉 ${esc(t.dose)}</span>
+      </div>
+      <div style="font-size:11px;color:var(--fog);margin-top:6px">By: ${esc(t.by)} ${t.next!=="—"?`· Next: ${t.next}`:""}</div>
+    </div>`;}).join('');
+
+  const drugHTML=`<div class="card" style="background:#2ECC7112;border:1px solid #2ECC7133">
+    <div style="font-size:11px;color:#2ECC71;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px">Essential Drug Cabinet — Keep Always Stocked</div>
+    ${[{n:"Oxytetracycline 20% LA",use:"Pneumonia, Tick fever, Footrot",dose:"1ml/10kg IM",c:"#E74C3C"},
+       {n:"Ivermectin 1% Pour-on",use:"Internal + External parasites (broad spectrum)",dose:"0.2mg/kg SC",c:"#2ECC71"},
+       {n:"Albendazole 25%",use:"Worms, Liver flukes, Tapeworms",dose:"7.5mg/kg PO",c:"#27AE60"},
+       {n:"Diminazene (Berenil)",use:"Trypanosomosis — CRITICAL in Kwara State",dose:"3.5mg/kg IM",c:"#E67E22"},
+       {n:"Calcium Borogluconate 40%",use:"Milk fever, Hypocalcaemia post-calving",dose:"400ml IV slow",c:"#5DADE2"},
+       {n:"Vitamin AD3E Injection",use:"Growth, Immunity, Fertility support",dose:"1ml/20kg IM",c:"#D4AF37"},
+       {n:"Adrenaline 1:1000",use:"Anaphylaxis — EMERGENCY drug (always in stock!)",dose:"0.2ml/100kg IM",c:"#E74C3C"},
+       {n:"Oxytocin 10IU/ml",use:"Dystocia, Retained placenta, Milk let-down",dose:"10–20IU IM",c:"#8A9BA8"},
+       {n:"Penicillin-Streptomycin",use:"Wound infections, Respiratory disease",dose:"1ml/25kg IM",c:"#5DADE2"},
+       {n:"Enrofloxacin 5% (Baytril)",use:"Severe systemic infections",dose:"2.5mg/kg IM",c:"#E67E22"},
+    ].map(d=>`<div style="padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--div)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${d.c};flex-shrink:0"></div>
+        <span style="font-size:13px;font-weight:700;color:var(--cream)">${d.n}</span>
+      </div>
+      <div style="font-size:11px;color:var(--mist);padding-left:16px">${d.use}</div>
+      <div style="font-size:11px;color:${d.c};padding-left:16px;margin-top:2px;font-weight:600">Dose: ${d.dose}</div>
+    </div>`).join('')}
+  </div>`;
+
+  return `<div class="fu">
+    <div class="sh">
+      <div><h2>Health & Veterinary</h2><p>Treatment records · Sick bay</p></div>
+      <button class="sh-add" onclick="showAddTreatment()">➕ Add</button>
+    </div>
+    ${sick.length>0?`<div style="background:#E74C3C18;border:1px solid #E74C3C44;border-radius:16px;padding:14px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">${dotHtml('#E74C3C')}<span style="font-weight:700;color:#E74C3C;font-size:14px">Sick Bay — ${sick.length} animal${sick.length>1?"s":""} require treatment</span></div>
+      ${sick.map(a=>`<div style="font-size:12px;color:#E74C3Ccc;padding-left:18px;margin-top:4px">⚠ ${esc(a.id)} (${esc(a.breed)}): ${esc(a.notes)||"Needs examination"}</div>`).join('')}
+    </div>`:''}
+    <div style="display:flex;background:var(--card);border-radius:14px;padding:4px;margin-bottom:16px;border:1px solid var(--div)">
+      ${[["treatments","💊 Treatments"],["drugs","💉 Drug Guide"]].map(([k,l])=>`
+        <button onclick="healthTab='${k}';renderScreen()" style="flex:1;padding:9px;border-radius:11px;border:none;background:${healthTab===k?"#2ECC7122":"transparent"};color:${healthTab===k?"#2ECC71":"var(--fog)"};font-weight:700;font-size:13px;cursor:pointer;font-family:var(--body);border-bottom:${healthTab===k?"2px solid #2ECC71":"2px solid transparent"};transition:all .2s">${l}</button>`).join('')}
+    </div>
+    ${healthTab==="treatments"?txHTML:drugHTML}
+  </div>`;
+}
+
+function showAddTreatment(){
+  openSheet("Record Treatment",`
+    <div class="field"><label>Animal Tag</label><select id="t-aid">${DB.animals.map(a=>`<option>${a.id}</option>`).join('')}</select></div>
+    <div class="field"><label>Diagnosis / Condition</label><input id="t-dx" type="text" placeholder="e.g. Respiratory infection — fever 40.5°C"/></div>
+    <div class="field"><label>Drug Used</label><input id="t-drug" type="text" placeholder="e.g. Oxytetracycline 20% LA"/></div>
+    <div class="field"><label>Dose & Route</label><input id="t-dose" type="text" placeholder="e.g. 5ml IM"/></div>
+    <div class="field"><label>Treated By</label><input id="t-by" type="text" value="Farm Manager"/></div>
+    <div class="field"><label>Treatment Status</label><select id="t-status"><option>Ongoing</option><option>Completed</option><option>Referred to Vet</option></select></div>
+    <button class="btn btn-primary" onclick="saveTreatment()">💾 Save Treatment Record</button>
+  `);
+}
+function saveTreatment(){
+  const dx=document.getElementById('t-dx').value.trim();
+  const drug=document.getElementById('t-drug').value.trim();
+  if(!dx||!drug)return;
+  DB.treatments.unshift({id:Date.now(),date:new Date().toISOString().split("T")[0],aid:document.getElementById('t-aid').value,drug,dose:document.getElementById('t-dose').value,dx,by:document.getElementById('t-by').value,status:document.getElementById('t-status').value,next:"—"});
+  save(); closeSheet(); renderScreen();
+}
+
+/* ── FEEDING ── */
+function renderFeeding(){
+  const done=DB.feeding.filter(f=>f.done).length;
+  const stocks=[
+    {n:"Maize Grain",qty:120,max:200,unit:"kg",c:"#D4AF37",lo:true},
+    {n:"Groundnut Cake (GNC)",qty:45,max:100,unit:"kg",c:"#2ECC71",lo:true},
+    {n:"Wheat Offal / Bran",qty:90,max:150,unit:"kg",c:"#5DADE2",lo:false},
+    {n:"Fresh Grass (cut)",qty:70,max:100,unit:"%",c:"#27AE60",lo:false},
+    {n:"Hay / Groundnut Haulm",qty:220,max:500,unit:"kg",c:"#E67E22",lo:false},
+    {n:"Cotton Seed Cake",qty:30,max:80,unit:"kg",c:"#8A9BA8",lo:true},
+  ];
+  return `<div class="fu">
+    <div class="sh"><div><h2>Feeding Management</h2><p>${done} of ${DB.feeding.length} rounds completed today</p></div></div>
+    <div class="card" style="margin-bottom:18px;background:#1A6B3C44;border:1px solid #2ECC7133">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;color:var(--mist)">Today's Feeding Progress</span>
+        <span style="font-size:15px;font-weight:800;color:var(--glow);font-family:var(--h1)">${pct(done,DB.feeding.length)}%</span>
+      </div>
+      ${barHtml(pct(done,DB.feeding.length),"#4AFF91",10)}
+      <div style="display:flex;gap:10px;margin-top:14px">
+        ${[["🐐 Goats","50 Animals","#2ECC71"],["🐄 Cattle","15 Animals","#5DADE2"],["💧 Water","Adequate","#2E86AB"]].map(([l,v,c])=>`
+          <div style="flex:1;background:${c}18;border-radius:10px;padding:8px 4px;text-align:center">
+            <div style="font-size:13px;font-weight:700;color:${c}">${v}</div>
+            <div style="font-size:10px;color:var(--fog)">${l}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="sh"><div><h2>Daily Schedule</h2><p>Tap to mark complete</p></div></div>
+    ${DB.feeding.map(f=>`
+      <div onclick="toggleFeed(${f.id})" style="display:flex;align-items:center;gap:13px;background:${f.done?"#2ECC7112":"var(--card)"};border:1px solid ${f.done?"#2ECC7155":"var(--div)"};border-radius:15px;padding:13px 14px;cursor:pointer;transition:all .2s;margin-bottom:9px">
+        <div style="width:42px;height:42px;border-radius:12px;background:${f.done?"#2ECC71":"var(--smoke)"};border:2px solid ${f.done?"#2ECC71":"var(--clay)"};display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s">
+          ${f.done?`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E0A05" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`:`<span style="font-size:11px;font-weight:700;color:var(--fog)">${f.time}</span>`}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:600;color:${f.done?"var(--fog)":"var(--cream)"};margin-bottom:3px">${esc(f.label)}</div>
+          <div style="font-size:11px;color:var(--fog)">🐐 ${esc(f.goat)}</div>
+          <div style="font-size:11px;color:var(--fog)">🐄 ${esc(f.cattle)}</div>
+        </div>
+        ${badgeHtml(f.done?"Done":"Pending",f.done?"#2ECC71":"#E67E22")}
+      </div>`).join('')}
+    <div class="sh" style="margin-top:8px"><div><h2>Feed Stock Levels</h2><p>Current inventory</p></div></div>
+    ${stocks.map(s=>`<div class="card" style="${s.lo?"border:1px solid #E74C3C44":""}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div><span style="font-size:13px;font-weight:600;color:var(--cream)">${s.n}</span>${s.lo?'<span style="font-size:11px;color:#E74C3C;margin-left:8px;font-weight:600"> ⚠ Low — reorder!</span>':''}</div>
+        <span style="font-size:13px;font-weight:700;color:${s.lo?"#E74C3C":"var(--mist)"}">${s.qty} ${s.unit}</span>
+      </div>
+      ${barHtml(pct(s.qty,s.max),s.lo?"#E74C3C":s.c,7)}
+      <div style="font-size:11px;color:var(--fog);margin-top:5px">${pct(s.qty,s.max)}% of target stock level</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+/* ── FINANCE ── */
+let financTab="all";
+function renderFinance(){
+  const income=DB.txns.filter(t=>t.type==="Sale").reduce((s,t)=>s+t.amt,0);
+  const expense=DB.txns.filter(t=>t.type==="Expense").reduce((s,t)=>s+t.amt,0);
+  const profit=income-expense;
+  const list=financTab==="all"?DB.txns:DB.txns.filter(t=>t.type===(financTab==="sales"?"Sale":"Expense"));
+
+  const revCats=[
+    {l:"Live Animal Sales",v:DB.txns.filter(t=>t.type==="Sale"&&(t.cat.includes("Goat")||t.cat.includes("Cattle"))).reduce((s,t)=>s+t.amt,0),c:"#2ECC71"},
+    {l:"Milk & Dairy",v:DB.txns.filter(t=>t.type==="Sale"&&t.cat.includes("Milk")).reduce((s,t)=>s+t.amt,0),c:"#5DADE2"},
+    {l:"Manure / Compost",v:DB.txns.filter(t=>t.type==="Sale"&&t.cat.includes("Manure")).reduce((s,t)=>s+t.amt,0),c:"#E67E22"},
+  ];
+
+  return `<div class="fu">
+    <div class="sh"><div><h2>Finance & Sales</h2><p>Revenue, expenses & profit</p></div><button class="sh-add" onclick="showAddTx()">➕ Record</button></div>
+    <div style="background:linear-gradient(135deg,#1A6B3Ccc,var(--bark));border:1px solid #2ECC7144;border-radius:22px;padding:20px;margin-bottom:16px">
+      <div style="font-size:12px;color:var(--fog);margin-bottom:6px">Net Profit — Current Period</div>
+      <div style="font-family:var(--h1);font-size:32px;font-weight:900;color:${profit>=0?"#4AFF91":"#E74C3C"};letter-spacing:-1px;margin-bottom:16px">${profit>=0?"+ ":"− "}${fmt(Math.abs(profit))}</div>
+      <div style="display:flex;gap:0">
+        ${[["Revenue",income,"#2ECC71"],["Expenses",expense,"#E74C3C"],["ROI",`${income>0?pct(profit,expense):0}%`,"#D4AF37"]].map(([l,v,c],i)=>`
+          <div style="flex:1;${i<2?"border-right:1px solid var(--div);padding-right:16px;":""}${i>0?"padding-left:16px":""}">
+            <div style="font-size:11px;color:var(--fog)">${l}</div>
+            <div style="font-family:var(--h1);font-size:17px;font-weight:700;color:${c};margin-top:3px">${typeof v==="number"?fmt(v):v}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div style="font-size:11px;color:var(--fog);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">Revenue Breakdown</div>
+      ${revCats.map(r=>`<div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-size:12px;color:var(--mist)">${r.l}</span>
+          <span style="font-size:12px;font-weight:700;color:${r.c}">${fmt(r.v)}</span>
+        </div>
+        ${barHtml(income>0?pct(r.v,income):0,r.c,6)}
+      </div>`).join('')}
+    </div>
+    <div style="display:flex;gap:0;background:var(--card);border-radius:14px;padding:4px;margin-bottom:14px;border:1px solid var(--div)">
+      ${[["all","All"],["sales","Sales"],["expenses","Expenses"]].map(([k,l])=>`
+        <button onclick="financTab='${k}';renderScreen()" style="flex:1;padding:8px;border-radius:11px;border:none;background:${financTab===k?"#2ECC7122":"transparent"};color:${financTab===k?"#2ECC71":"var(--fog)"};font-weight:700;font-size:13px;cursor:pointer;font-family:var(--body);transition:all .2s">${l}</button>`).join('')}
+    </div>
+    ${list.map(t=>`<div class="tx-item">
+      <div class="tx-icon" style="background:${txCol(t.type)}22">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${txCol(t.type)}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          ${t.type==="Sale"?'<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>'
+                           :'<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>'}
+        </svg>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="tx-cat">${esc(t.cat)}</div>
+        <div class="tx-meta">${esc(t.party)}</div>
+        <div class="tx-sub">${esc(t.qty)} · ${t.date}</div>
+      </div>
+      <div class="tx-amt" style="color:${txCol(t.type)}">${t.type==="Sale"?"+":"−"}${fmt(t.amt)}</div>
+    </div>`).join('')}
+  </div>`;
+}
+function showAddTx(){
+  openSheet("Record Transaction",`
+    <div class="field"><label>Type</label><select id="tx-type" onchange="updateTxCats()"><option>Sale</option><option>Expense</option></select></div>
+    <div class="field"><label>Category</label><select id="tx-cat">
+      <option>Live Goats</option><option>Live Cattle</option><option>Milk Sales</option><option>Goat Meat</option><option>Beef</option><option>Manure / Compost</option><option>Breeding Stock</option><option>Kid Sales</option><option>Other Sale</option>
+    </select></div>
+    <div class="field"><label>Amount (NGN)</label><input id="tx-amt" type="number" placeholder="0"/></div>
+    <div class="field"><label>Quantity / Description</label><input id="tx-qty" type="text" placeholder="e.g. 3 goats, 50kg, 1 bag"/></div>
+    <div class="field"><label>Buyer / Supplier</label><input id="tx-party" type="text" placeholder="Full name / market name"/></div>
+    <button class="btn btn-primary" onclick="saveTx()">💾 Save Transaction</button>
+  `);
+}
+function saveTx(){
+  const amt=+document.getElementById('tx-amt').value;
+  if(!amt)return;
+  DB.txns.unshift({id:Date.now(),date:new Date().toISOString().split("T")[0],type:document.getElementById('tx-type').value,cat:document.getElementById('tx-cat').value,amt,qty:document.getElementById('tx-qty').value,party:document.getElementById('tx-party').value,notes:""});
+  save(); closeSheet(); renderScreen();
+}
+
+/* ── MARKET ── */
+function renderMarket(){
+  const prices=[
+    {item:"Live Goat — adult doe",price:"₦25,000–40,000",up:true},
+    {item:"Live Goat — breeding buck",price:"₦35,000–65,000",up:true},
+    {item:"Weaned Kid",price:"₦8,000–15,000",up:null},
+    {item:"Live Cattle — Bunaji cow",price:"₦300,000–520,000",up:true},
+    {item:"Breeding Bull",price:"₦600,000–900,000",up:true},
+    {item:"Goat Meat (Chevon) per kg",price:"₦3,000–4,500",up:true},
+    {item:"Beef (retail) per kg",price:"₦2,500–3,800",up:true},
+    {item:"Fresh Cow Milk per litre",price:"₦300–600",up:true},
+    {item:"Goat Milk per litre",price:"₦500–900",up:true},
+    {item:"Organic Manure per ton",price:"₦4,000–8,000",up:null},
+  ];
+  const sales=DB.txns.filter(t=>t.type==="Sale");
+  const income=sales.reduce((s,t)=>s+t.amt,0);
+  const targets=[
+    {l:"Live Goat Sales (20/yr)",tgt:700000,act:sales.filter(t=>t.cat.includes("Goat")).reduce((s,t)=>s+t.amt,0),c:"#2ECC71"},
+    {l:"Cattle Sales (4/yr)",tgt:1600000,act:sales.filter(t=>t.cat.includes("Cattle")).reduce((s,t)=>s+t.amt,0),c:"#5DADE2"},
+    {l:"Milk Sales",tgt:1200000,act:sales.filter(t=>t.cat.includes("Milk")).reduce((s,t)=>s+t.amt,0),c:"#2E86AB"},
+    {l:"Manure & Compost",tgt:80000,act:sales.filter(t=>t.cat.includes("Manure")).reduce((s,t)=>s+t.amt,0),c:"#E67E22"},
+  ];
+  return `<div class="fu">
+    <div class="sh"><div><h2>Market & Sales</h2><p>Live animals · Produce · Prices</p></div><button class="sh-add" onclick="showAddSale()">➕ Sale</button></div>
+    <div class="card" style="margin-bottom:18px;background:#E67E2212;border:1px solid #E67E2244">
+      <div style="font-size:11px;color:#E67E22;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">🏪 Market Prices — Ilorin, Kwara State</div>
+      ${prices.map(p=>`<div class="price-row">
+        <span class="price-item">${esc(p.item)}</span>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <span class="price-val" style="color:#E67E22">${p.price}</span>
+          ${p.up!==null?`<span style="font-size:12px;color:${p.up?"#2ECC71":"var(--fog)"}">${p.up?"↑":"→"}</span>`:''}
+        </div>
+      </div>`).join('')}
+      <div style="font-size:10px;color:var(--fog);margin-top:10px">*Prices as at Jan 2024. Update monthly.</div>
+    </div>
+    <div class="card" style="margin-bottom:18px">
+      <div style="font-size:11px;color:var(--fog);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">Annual Revenue Targets</div>
+      ${targets.map(r=>`<div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-size:12px;color:var(--mist)">${r.l}</span>
+          <span style="font-size:12px;color:var(--fog)">${fmt(r.act)} / ${fmt(r.tgt)}</span>
+        </div>
+        ${barHtml(pct(r.act,r.tgt),r.c,7)}
+        <div style="font-size:10px;color:var(--fog);margin-top:3px">${pct(r.act,r.tgt)}% of annual target</div>
+      </div>`).join('')}
+    </div>
+    <div class="sh"><div><h2>Recent Sales</h2></div></div>
+    ${sales.slice(0,6).map(s=>`<div class="tx-item">
+      <div class="tx-icon" style="background:#2ECC7122"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ECC71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div>
+      <div style="flex:1;min-width:0">
+        <div class="tx-cat">${esc(s.cat)}</div>
+        <div class="tx-meta">${esc(s.party)}</div>
+        <div class="tx-sub">${esc(s.qty)} · ${s.date}</div>
+      </div>
+      <div class="tx-amt" style="color:#2ECC71">+${fmt(s.amt)}</div>
+    </div>`).join('')}
+  </div>`;
+}
+function showAddSale(){
+  openSheet("Record New Sale",`
+    <div class="field"><label>Animal / Product</label><input id="s-aid" type="text" placeholder="Tag no. or product description"/></div>
+    <div class="field"><label>Sale Type</label><select id="s-type"><option>Live Animal</option><option>Goat Meat</option><option>Beef</option><option>Milk</option><option>Breeding Stock</option><option>Kid Sales</option><option>Manure</option><option>Other</option></select></div>
+    <div class="field"><label>Buyer Name</label><input id="s-buyer" type="text" placeholder="Buyer full name"/></div>
+    <div class="field"><label>Buyer Phone</label><input id="s-phone" type="tel" placeholder="080XXXXXXXX"/></div>
+    <div class="field"><label>Sale Amount (NGN)</label><input id="s-amt" type="number" placeholder="0"/></div>
+    <div class="field"><label>Date of Sale</label><input id="s-date" type="date" value="${new Date().toISOString().split("T")[0]}"/></div>
+    <button class="btn btn-primary" onclick="saveSale()">💾 Record Sale</button>
+  `);
+}
+function saveSale(){
+  const amt=+document.getElementById('s-amt').value;
+  if(!amt)return;
+  DB.txns.unshift({id:Date.now(),date:document.getElementById('s-date').value,type:"Sale",cat:document.getElementById('s-type').value,amt,qty:document.getElementById('s-aid').value,party:document.getElementById('s-buyer').value,notes:document.getElementById('s-phone').value});
+  save(); closeSheet();
+}
+
+/* ── VACCINES ── */
+function renderVaccines(){
+  const overdue=DB.vaccines.filter(v=>v.status==="Overdue");
+  return `<div class="fu">
+    <div class="sh"><div><h2>Vaccination Calendar</h2><p>Annual immunisation programme</p></div></div>
+    ${overdue.length>0?`<div style="background:#E74C3C18;border:1px solid #E74C3C55;border-radius:16px;padding:14px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">${dotHtml('#E74C3C')}<span style="font-weight:700;color:#E74C3C">OVERDUE — Immediate Action Required!</span></div>
+      ${overdue.map(v=>`<div style="font-size:12px;color:#E74C3Ccc;padding-left:18px">⚠ ${esc(v.name)} (${esc(v.sp)}) — due ${v.due}</div>`).join('')}
+    </div>`:''}
+    ${DB.vaccines.map(v=>{
+      const c=vCol(v.status);
+      return `<div class="vax-card">
+        <div class="vax-header">
+          <div class="vax-icon" style="background:${c}22"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg></div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap">
+              <span class="vax-name">${esc(v.name)}</span>${badgeHtml(v.status,c)}
+            </div>
+            <div class="vax-sp">Species: ${v.sp}</div>
+            <div style="font-size:12px;color:var(--fog);margin-top:2px">${esc(v.notes)}</div>
+            <div class="vax-dates">
+              <span style="color:var(--fog)">Last: ${v.last}</span>
+              <span style="color:${c};font-weight:700">Due: ${v.due}</span>
+            </div>
+          </div>
+        </div>
+        ${v.status!=="Completed"?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--div)">
+          <button onclick="markVaxDone(${v.id})" class="btn btn-sm btn-outline" style="border-color:#2ECC71;color:#2ECC71">✓ Mark as Administered</button>
+        </div>`:''}
+      </div>`;}).join('')}
+    <div class="card" style="margin-top:8px;background:#1A6B3C44;border:1px solid #2ECC7133">
+      <div style="font-size:11px;color:#2ECC71;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">Annual Vet Budget (65 Animals)</div>
+      ${[["Vaccines — All (goats + cattle)","₦200,000 – ₦350,000"],["Deworming × 4 treatments/year","₦120,000 – ₦180,000"],["Antibiotics & emergency drugs","₦200,000 – ₦300,000"],["Vitamins & mineral supplements","₦150,000 – ₦220,000"],["Tick control — monthly spray","₦80,000 – ₦120,000"],["Vet consultancy fees","₦360,000 – ₦600,000"]].map(([k,v])=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--div)">
+          <span style="font-size:12px;color:var(--mist);flex:1">${k}</span>
+          <span style="font-size:12px;font-weight:700;color:#2ECC71;flex-shrink:0">${v}</span>
+        </div>`).join('')}
+      <div style="margin-top:12px;padding:12px;background:#2ECC7118;border-radius:12px;display:flex;justify-content:space-between">
+        <span style="font-weight:700;color:var(--cream)">Total Annual Vet Budget</span>
+        <span style="font-family:var(--h1);font-size:17px;font-weight:700;color:#4AFF91">₦700K – ₦1.1M</span>
+      </div>
+    </div>
+  </div>`;
+}
+function markVaxDone(id){
+  DB.vaccines=DB.vaccines.map(v=>v.id===id?{...v,status:"Completed",last:new Date().toISOString().split("T")[0]}:v);
+  save(); renderScreen();
+}
+
+/* ── TASKS ── */
+function renderTasks(){
+  const done=DB.tasks.filter(t=>t.done).length;
+  return `<div class="fu">
+    <div class="sh"><div><h2>Daily Tasks</h2><p>${done} of ${DB.tasks.length} complete — ${pct(done,DB.tasks.length)}%</p></div></div>
+    <div class="card" style="margin-bottom:18px">
+      ${barHtml(pct(done,DB.tasks.length),"#4AFF91",12)}
+      <div style="display:flex;justify-content:space-between;margin-top:10px">
+        <span style="font-size:12px;color:var(--fog)">${done} tasks complete</span>
+        <span style="font-size:12px;color:var(--fog)">${DB.tasks.length-done} remaining</span>
+      </div>
+    </div>
+    ${DB.tasks.map(t=>`
+      <div class="task-item ${t.done?'done':''}" onclick="toggleTask(${t.id})">
+        <div class="task-check ${t.done?'done':''}">
+          ${t.done?`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0E0A05" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="task-text">${esc(t.task)}</div>
+          <div class="task-meta">${t.time} · ${esc(t.who)}</div>
+        </div>
+        ${!t.done?`<div class="pri-dot" style="background:${t.pri==="high"?"#E74C3C":"#F39C12"}"></div>`:''}
+      </div>`).join('')}
+  </div>`;
+}
+
+/* ── STAFF ── */
+function renderStaff(){
+  const payroll=DB.staff.reduce((s,st)=>s+st.sal,0);
+  const clrs=["#2ECC71","#5DADE2","#E67E22","#D4AF37","#E74C3C","#8A9BA8","#27AE60"];
+  return `<div class="fu">
+    <div class="sh"><div><h2>Staff Management</h2><p>${DB.staff.length} team members</p></div></div>
+    <div class="stat-row" style="margin-bottom:18px">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#5DADE222"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5DADE2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div class="stat-label">Team Size</div>
+        <div class="stat-value" style="color:#5DADE2">${DB.staff.length}</div>
+        <div class="stat-sub">Farm personnel</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#E67E2222"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="stat-label">Monthly Payroll</div>
+        <div class="stat-value" style="color:#E67E22;font-size:18px">${fmt(payroll)}</div>
+        <div class="stat-sub">Total monthly</div>
+      </div>
+    </div>
+    ${DB.staff.map((s,i)=>`<div class="card">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:48px;height:48px;border-radius:14px;background:${clrs[i%clrs.length]}33;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--h1);font-size:20px;font-weight:700;color:${clrs[i%clrs.length]}">${s.name.charAt(0)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-family:var(--h1);font-size:15px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.name)}</div>
+          <div style="font-size:12px;color:var(--mist)">${esc(s.role)}</div>
+          <div style="font-size:11px;color:var(--fog)">${s.phone}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:var(--h1);font-size:16px;font-weight:700;color:#2ECC71">${fmt(s.sal)}</div>
+          <div style="font-size:10px;color:var(--fog)">per month</div>
+          ${badgeHtml(s.status,s.status==="Active"?"#2ECC71":"#5DADE2")}
+        </div>
+      </div>
+    </div>`).join('')}
+    <div class="card" style="margin-top:8px;background:#1A6B3C44;border:1px solid #2ECC7133">
+      <div style="font-size:11px;color:#2ECC71;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">Payroll Summary</div>
+      ${[["Monthly payroll",fmt(payroll)],["Annual payroll",fmt(payroll*12)],["Labour % of revenue","~15% (target <20%)"]].map(([k,v])=>`
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--div)">
+          <span style="font-size:13px;color:var(--mist)">${k}</span>
+          <span style="font-size:13px;font-weight:700;color:var(--cream)">${v}</span>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ── REPORTS ── */
+function renderReports(){
+  const income=DB.txns.filter(t=>t.type==="Sale").reduce((s,t)=>s+t.amt,0);
+  const expense=DB.txns.filter(t=>t.type==="Expense").reduce((s,t)=>s+t.amt,0);
+  const healthy=DB.animals.filter(a=>a.status==="Healthy").length;
+  const feedDone=DB.feeding.filter(f=>f.done).length;
+  const tasksDone=DB.tasks.filter(t=>t.done).length;
+
+  return `<div class="fu">
+    <div class="sh"><div><h2>Farm Reports</h2><p>Analytics & 5-year projections</p></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+      ${[[`${pct(healthy,DB.animals.length)}%`,"Herd Health Rate",`${healthy}/${DB.animals.length} healthy`,"#2ECC71"],
+         [`${pct(feedDone,DB.feeding.length)}%`,"Feeding Done","Today","#27AE60"],
+         [`${income>0?pct(income-expense,expense):0}%`,"Monthly ROI","Revenue vs costs","#D4AF37"],
+         [`${pct(tasksDone,DB.tasks.length)}%`,"Tasks Complete","Today","#5DADE2"]].map(([v,l,sub,c])=>`
+        <div class="card" style="text-align:center">
+          <div style="font-family:var(--h1);font-size:26px;font-weight:700;color:${c}">${v}</div>
+          <div style="font-size:11px;color:var(--fog);margin-top:2px">${l}</div>
+          <div style="font-size:10px;color:var(--smoke);margin-top:1px">${sub}</div>
+        </div>`).join('')}
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:11px;color:var(--fog);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">Herd Composition Analysis</div>
+      ${[[`Healthy Animals`,healthy,DB.animals.length,"#2ECC71"],
+         [`Pregnant`,DB.animals.filter(a=>a.status==="Pregnant").length,DB.animals.length,"#5DADE2"],
+         [`Sick (in treatment)`,DB.animals.filter(a=>a.status==="Sick").length,DB.animals.length,"#E74C3C"],
+         [`Goats`,DB.animals.filter(a=>a.sp==="Goat").length,DB.animals.length,"#2ECC71"],
+         [`Cattle`,DB.animals.filter(a=>a.sp==="Cattle").length,DB.animals.length,"#5DADE2"]].map(([l,v,t,c])=>`
+        <div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <span style="font-size:12px;color:var(--mist)">${l}</span>
+            <span style="font-size:12px;font-weight:700;color:${c}">${v} <span style="color:var(--fog);font-weight:400">/ ${t}</span></span>
+          </div>
+          ${barHtml(pct(v,t),c,7)}
+        </div>`).join('')}
+    </div>
+    <div class="card" style="background:#1A6B3C44;border:1px solid #2ECC7144;margin-bottom:14px">
+      <div style="font-size:11px;color:#2ECC71;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">5-Year Growth Projection</div>
+      ${[["Year 1","50","15","₦7.8M","₦3.2M","32%"],["Year 2","100","25","₦14.5M","₦6.3M","77%"],["Year 3","200","40","₦26M","₦11.5M","79%"],["Year 4","350","70","₦44M","₦20M","83%"],["Year 5","500","100","₦75M","₦33M","79%"]].map((r,i)=>`
+        <div style="padding:10px 0;border-bottom:${i<4?"1px solid var(--div)":"none"}">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:var(--h1);font-size:15px;font-weight:700;color:var(--cream)">${r[0]}</span>
+            <span style="font-size:13px;font-weight:700;color:#4AFF91">${r[4]} profit</span>
+          </div>
+          <div style="display:flex;gap:14px;margin-top:4px;font-size:11px;color:var(--fog);flex-wrap:wrap">
+            <span>🐐 ${r[1]} goats</span><span>🐄 ${r[2]} cattle</span><span>Rev: ${r[3]}</span><span style="color:#2ECC71">ROI: ${r[5]}</span>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="card" style="background:#E67E2212;border:1px solid #E67E2244">
+      <div style="font-size:11px;color:#E67E22;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">💡 Low-Cost Feed Sourcing — Ilorin</div>
+      ${[["Oja-Oba & Ipata Markets","Maize, GNC, wheat offal — negotiate 5+ bag discount","★★★"],
+         ["Kwara ADP (subsidised)","Register as farmer for input subsidies","★★★"],
+         ["Post-harvest Shonga/Lafiagi","Groundnut haulm, cowpea haulm at harvest time — very cheap","★★★"],
+         ["Flour mills (direct)","Wheat offal 30–40% cheaper than market rate","★★★"],
+         ["Grow Napier on farm","2 acres = ₦300K+/year roughage savings","★★★"]].map(([l,t,s])=>`
+        <div style="padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--div)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:13px;font-weight:600;color:var(--cream)">${l}</span>
+            <span style="font-size:12px;color:#D4AF37">${s}</span>
+          </div>
+          <div style="font-size:11px;color:var(--mist)">${t}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ── SETTINGS ── */
+function renderSettings(){
+  return `<div class="fu">
+    <div class="sh"><div><h2>Settings</h2><p>Farm configuration & preferences</p></div></div>
+    <div style="background:linear-gradient(135deg,#1A6B3Ccc,var(--bark));border:1px solid #2ECC7144;border-radius:22px;padding:24px;text-align:center;margin-bottom:22px">
+      <div style="font-size:52px;margin-bottom:8px">🌿</div>
+      <div style="font-family:var(--h1);font-size:28px;font-weight:900;color:#4AFF91;letter-spacing:-1px">AMIRLA</div>
+      <div style="font-size:11px;color:var(--mist);margin-top:4px;letter-spacing:2px;text-transform:uppercase">Farm Management System v1.0</div>
+      <div style="font-size:11px;color:var(--fog);margin-top:8px">Ilorin, Kwara State, Nigeria</div>
+      <div style="font-size:11px;color:var(--fog)">50 Goats · 15 Cattle · Professional Livestock Management</div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--div);font-size:12px;color:#2ECC71">Agricultural Management & Intelligence for Rural Livestock Applications</div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:11px;color:var(--fog);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">App Preferences</div>
+      ${[["Push Notifications","Alerts for treatments, tasks & vaccinations","notify"],
+         ["Offline Mode","Work without internet — data saved locally","offline"],
+         ["Dark Earth Theme","Premium dark mode (always active)","darkmode"]].map(([l,sub,k])=>`
+        <div class="toggle-wrap">
+          <div><div style="font-size:14px;font-weight:600;color:var(--cream)">${l}</div><div style="font-size:11px;color:var(--fog);margin-top:2px">${sub}</div></div>
+          <div class="toggle-track" style="background:${DB[k]!==false?"#2ECC71":"var(--smoke)"}" onclick="DB['${k}']=!DB['${k}'];save();renderScreen()">
+            <div class="toggle-thumb" style="left:${DB[k]!==false?"22px":"2px"}"></div>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:11px;color:var(--fog);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px">Farm Configuration</div>
+      ${[["🏡","Farm Profile","Ilorin Livestock Farm, Kwara State"],["🔔","Notification Schedule","Daily reminders & task alerts"],["👥","User Accounts","Manage staff access"],["📤","Export Data","Excel / CSV download"],["⚖️","Weights & Units","kg, litres, Naira (NGN)"]].map(([ic,l,sub])=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--div);cursor:pointer">
+          <div style="width:38px;height:38px;border-radius:11px;background:#2ECC7122;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${ic}</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--cream)">${l}</div><div style="font-size:11px;color:var(--fog)">${sub}</div></div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3A4A54" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>`).join('')}
+    </div>
+    <div style="text-align:center;padding:16px 0;color:var(--fog);font-size:12px">
+      <div>© 2024 AMIRLA Farm Management</div>
+      <div style="color:var(--smoke);margin-top:4px;font-size:11px">Built for Nigerian Livestock Farmers</div>
+    </div>
+  </div>`;
+}
+
+/* ══════════ SCREEN ROUTER ══════════ */
+const RENDERERS = {
+  home:renderHome, animals:renderAnimals, health:renderHealth,
+  feeding:renderFeeding, finance:renderFinance, market:renderMarket,
+  vaccines:renderVaccines, tasks:renderTasks, staff:renderStaff,
+  reports:renderReports, settings:renderSettings
+};
+function renderScreen(){
+  const fn=RENDERERS[currentScreen]||renderHome;
+  document.getElementById('content').innerHTML=fn();
+  updateNav();
+}
+
+/* ══════════ INTERACTIONS ══════════ */
+function toggleTask(id){
+  DB.tasks=DB.tasks.map(t=>t.id===id?{...t,done:!t.done}:t);
+  save(); renderScreen();
+}
+function toggleFeed(id){
+  DB.feeding=DB.feeding.map(f=>f.id===id?{...f,done:!f.done}:f);
+  save(); renderScreen();
+}
+
+/* ══════════ BOTTOM SHEET ══════════ */
+function openSheet(title, body){
+  closeSheet();
+  const el=document.createElement('div');
+  el.className='sheet-overlay'; el.id='sheet-overlay';
+  el.innerHTML=`<div class="sheet" id="bottom-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">${esc(title)}</div>
+      <button class="sheet-close" onclick="closeSheet()">✕</button>
+    </div>
+    ${body}
+  </div>`;
+  el.addEventListener('click',function(e){if(e.target===el)closeSheet();});
+  document.body.appendChild(el);
+}
+function closeSheet(){
+  const el=document.getElementById('sheet-overlay');
+  if(el) el.remove();
+}
+
+/* ══════════ PWA INSTALL ══════════ */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault(); deferredPrompt=e;
+  document.getElementById('install-banner').classList.remove('hidden');
+});
+document.getElementById('install-btn').addEventListener('click',async()=>{
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const {outcome}=await deferredPrompt.userChoice;
+  deferredPrompt=null;
+  document.getElementById('install-banner').classList.add('hidden');
+});
+document.getElementById('install-close').addEventListener('click',()=>{
+  document.getElementById('install-banner').classList.add('hidden');
+});
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('install-banner').classList.add('hidden');
+});
+
+/* ══════════ OFFLINE ══════════ */
+function showOfflineToast(){
+  const t=document.getElementById('offline-toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+window.addEventListener('offline',showOfflineToast);
+window.addEventListener('online',()=>{
+  const t=document.getElementById('offline-toast');
+  t.textContent='✅ Back online — synced'; t.style.background='#2ECC71';
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
+});
+
+/* ══════════ SPLASH ══════════ */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('splash').classList.add('gone');
+    setTimeout(()=>{const s=document.getElementById('splash');if(s)s.remove();},600);
+  },2200);
+  renderScreen();
+});
+</script>
+
+<script>
+/* ── SERVICE WORKER REGISTRATION ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('[AMIRLA] SW registered:', reg.scope))
+      .catch(err => console.log('[AMIRLA] SW failed:', err));
+  });
+}
+</script>
+
+</body>
+</html>
