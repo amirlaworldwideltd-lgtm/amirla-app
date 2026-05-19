@@ -1,0 +1,26 @@
+{
+  "background_color": "#0E0A05",
+  "description": "Farm management App for Nigerian livestock farmers.",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "AMIRLA",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "AMIRLA",
+  "start_url": "/",
+  "theme_color": "#0E0A05",
+  "icons": [
+    {
+      "src": "https://amirlaworldwideltd-lgtm.github.io/icons/icon-192.png",
+      "isSquare": false,
+      "isPng": true,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 0,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
+    }
+  ],
+  "id": "amirla-app"
+}
